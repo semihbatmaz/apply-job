@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Custom Suite" verbose="1" thread-count="1">
+    <listeners>
+        <listener class-name="com.insider.listener.ExecutionListener"/>
+        <listener class-name="com.insider.listener.SuiteListener"/>
+        <listener class-name="com.insider.listener.TestListener"/>
+    </listeners>
+    <test name="Apply Job" enabled="true">
+        <classes>
+            <class name="com.insider.testCases.ApplyJob"/>
+        </classes>
+    </test>
+</suite>
