@@ -25,5 +25,6 @@ public class ApplyJobOR {
     public static final By OPEN_POSITIONS_JOB_DEPARTMENT= By.xpath("//span[@class='position-department text-large font-weight-600 text-primary']");
     public static final By OPEN_POSITIONS_JOB_LOCATION= By.xpath("//div[@class='position-location text-large']");
     public static final By APPLY_NOW_BUTTON= By.xpath("//*[@id=\"jobs-list\"]/div[1]/div/a");
+    public static final By ANKARA_LOCATION_AREA= By.xpath("//div[contains(text(),'Ankara')]");
 
 }

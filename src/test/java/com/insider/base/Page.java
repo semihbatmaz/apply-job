@@ -6,6 +6,7 @@ import static com.insider.objectRepos.ApplyJobOR.CAREER_PAGE_SEE_ALL_TEAMS_BUTTO
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,7 +49,7 @@ public class Page {
 
     public static boolean waitUntilWebElementIsVisible (By by){
         boolean elementExists = false;
-        sleepInSeconds(3);
+        sleepInSeconds(2);
         try {
             int counter = 0;
             while (counter <= 20) {
@@ -104,7 +105,7 @@ public class Page {
     public static void scrollIntoView (By by){
         try {
             ((JavascriptExecutor) DriverFactory.getDriver()).executeScript("arguments[0].scrollIntoView(true);", DriverFactory.getDriver().findElement(by));
-            sleepInSeconds(7);
+            sleepInSeconds(4);
         } catch (Exception e) {
             LOGGER.debug(e);
         }
@@ -126,11 +127,8 @@ public class Page {
         WebElement element= DriverFactory.getDriver().findElement(by);
         int x = element.getSize().getWidth()* xAxisPercentage/100;
         int y = element.getSize().getHeight()* yAxisPercentage/100;
-
         Actions actions = new Actions(DriverFactory.getDriver());
         actions.moveToElement(element).moveByOffset(x,y).click().build().perform();
-
-
     }
 
     public static void switchToTab(int tabNo){
@@ -146,5 +144,48 @@ public class Page {
         return DriverFactory.getDriver().findElements(by).stream().map(element -> element.getText().trim()).collect(Collectors.toList());
     }
 
+    public static boolean checkIfWebElementExists(By by) {
+        try {
+            WebElement element = DriverFactory.getDriver().findElement(by);
+            if (element.isDisplayed() && element.isEnabled()) {
+                LOGGER.info("WebElement : [{}] | Exists", by.toString());
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        LOGGER.info("WebElement : [{}] | does not exist", by.toString());
+        return false;
+    }
+
+    public static void clickIfExists(By by) {
+        if (checkIfWebElementExists(by)) {
+            DriverFactory.getDriver().findElement(by).click();
+        }
+    }
+
+    public static boolean waitUntilWebElementIsInvisible (By by,int maxWaitTime){
+        boolean elementExists = true;
+        try {
+            int counter = 0;
+            while (counter <= maxWaitTime) {
+                if (!checkIfWebElementExists(by)) {
+                    elementExists = false;
+                    LOGGER.info("Web element [{}] became invisible attempt :  [{}]", by.toString(), counter);
+                    counter = maxWaitTime + 1;
+                } else {
+                    LOGGER.info("Web element [{}] is still visible. Waiting to become invisible. Attempt :  [{}]", by.toString(), counter);
+                    sleepInSeconds(1);
+                    counter++;
+                }
+            }
+            if (elementExists) {
+                LOGGER.info("WebElement [{}] still visible event after [{}] attempts", by.toString(), counter);
+            }
+        } catch (Exception e) {
+            LOGGER.warn(e);
+        }
+        return elementExists;
+    }
 
 }
