@@ -48,7 +48,7 @@ public class Page {
 
     public static boolean waitUntilWebElementIsVisible (By by){
         boolean elementExists = false;
-        sleepInSeconds(1);
+        sleepInSeconds(3);
         try {
             int counter = 0;
             while (counter <= 20) {
